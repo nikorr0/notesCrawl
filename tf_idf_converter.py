@@ -22,22 +22,29 @@
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-# testDataset = [
-#     "кабинет соцгум восстановить пропуск",
-#     "восстановить отчисление прийти кабинет 999",
-#     "приказ отчисление университет 92"
-# ]
+testDataset = {
+    2: "кабинет соцгум восстановить пропуск",
+    4: "восстановить отчисление прийти кабинет 999",
+    7: "приказ отчисление университет 92"
+}
 
 def getTFIDFWidthFromNotes(normalayzQuery, normalazeNotes):
     tfidf_vectorizer = TfidfVectorizer()
-    tfidf_vectorizer.fit(normalazeNotes)
+
+    collectionNotes = [v for v in normalazeNotes.values()]
+    tfidf_vectorizer.fit(collectionNotes)
+
     tfidf_query = tfidf_vectorizer.transform([normalayzQuery])
-    tfidf_notes = tfidf_vectorizer.transform(normalazeNotes)
+    
+    notesTFIDF = {}
+    for (keyNote, normalazeNote) in normalazeNotes.items():
+        notesTFIDF[keyNote] = tfidf_vectorizer.transform([normalazeNote]).toarray()
+
     
     return {
         "query": tfidf_query.toarray(), 
-        "notes": tfidf_notes.toarray()
+        "notes": notesTFIDF
     }
 
-# queryAndNotesTFIDF = getTFIDFWidthFromNotes("соцгум университет",testDataset)
-# print(queryAndNotesTFIDF)
+queryAndNotesTFIDF = getTFIDFWidthFromNotes("соцгум университет",testDataset)
+print(queryAndNotesTFIDF)
