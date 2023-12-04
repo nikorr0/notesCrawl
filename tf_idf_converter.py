@@ -1,5 +1,3 @@
-# Это делает Игнат
-#
 # На вход подается словарь из нормализованных текстов или словарь из одного запроса (слова разделены пробелом)
 # На выход возвращается словарь со списками из чисел
 #
@@ -22,12 +20,6 @@
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-# testDataset = {
-#     2: "кабинет соцгум восстановить пропуск",
-#     4: "восстановить отчисление прийти кабинет 999",
-#     7: "приказ отчисление университет 92"
-# }
-
 def getTFIDFWidthFromNotes(normalayzQuery, normalazeNotes):
     tfidf_vectorizer = TfidfVectorizer()
 
@@ -40,11 +32,7 @@ def getTFIDFWidthFromNotes(normalayzQuery, normalazeNotes):
     for (keyNote, normalazeNote) in normalazeNotes.items():
         notesTFIDF[keyNote] = tfidf_vectorizer.transform([normalazeNote]).toarray()[0]
 
-    
     return {
         "query": tfidf_query.toarray(), 
         "notes": notesTFIDF
     }
-
-# queryAndNotesTFIDF = getTFIDFWidthFromNotes("соцгум университет",testDataset)
-# print(queryAndNotesTFIDF)
