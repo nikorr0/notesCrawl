@@ -22,7 +22,7 @@ def get_sorted_keys(d, texts_to_return):
                  sorted_keys.append(key)
     return sorted_keys
 
-def get_texts_group(query, texts_dict, number_of_topics=10, texts_to_return=-1):
+def get_texts_group(query, texts_dict, number_of_topics=10, texts_to_return=-1, limit=0.5):
     if texts_to_return <= 0:
       texts_to_return = len(texts_dict) // 3
 
@@ -35,14 +35,16 @@ def get_texts_group(query, texts_dict, number_of_topics=10, texts_to_return=-1):
     common_corpus = [common_dictionary.doc2bow(text) for text in texts]
     query = common_dictionary.doc2bow(query)
 
-    lda = LdaModel(common_corpus, num_topics=number_of_topics, minimum_probability=0.0, passes=20, iterations=20)
+    lda = LdaModel(common_corpus, num_topics=number_of_topics, minimum_probability=0.0, passes=20, iterations=20, random_state=1)
 
     query_probs = [value[1] for value in lda[query]]
     distances = dict()
     
     for i in ids:
         text_probs = [value[1] for value in lda[common_corpus[i]]]
-        distances[i] = distance.cosine(query_probs, text_probs)
+        dist = distance.cosine(query_probs, text_probs)
+        if dist < limit:
+            distances[i] = distance.cosine(query_probs, text_probs)
     
     sorted_keys = get_sorted_keys(distances, texts_to_return)
 
