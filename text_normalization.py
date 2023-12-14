@@ -18,10 +18,10 @@ import string
 import re
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-import pymorphy2
+import pymorphy3
 
 def nomalize(texts_dict, mode="dict_texts"):
-    morph_analyzer = pymorphy2.MorphAnalyzer()
+    morph_analyzer = pymorphy3.MorphAnalyzer()
     stop_words = stopwords.words('russian')
 
     if mode == "query":
@@ -39,7 +39,7 @@ def nomalize(texts_dict, mode="dict_texts"):
     norm_texts = list()
     for text in texts:
         for p in string.punctuation:
-            text = text.replace(p, '')
+            text = text.replace(p, ' ').strip()
         text = text.lower()
         text = re.sub('[0-9]+', '', text)
         norm_words = list()

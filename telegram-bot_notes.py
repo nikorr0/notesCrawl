@@ -1,6 +1,6 @@
-# python-telegram-bot==20.7
 import json
 import os
+import logging
 
 from text_normalization import *
 from topic_selector import *
@@ -16,6 +16,11 @@ from telegram.ext import (
     MessageHandler,
     filters,
 )
+
+logging.basicConfig(filename='bot_logs.log', encoding='utf-8',
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.WARNING)
+logging.getLogger("httpx")
+logger = logging.getLogger(__name__)
 
 with open('text_data.json', 'r', encoding="utf8") as f:
     text_data = json.load(f)
