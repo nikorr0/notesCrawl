@@ -23,6 +23,7 @@ import pymorphy3
 def nomalize(texts_dict, mode="dict_texts"):
     morph_analyzer = pymorphy3.MorphAnalyzer()
     stop_words = stopwords.words('russian')
+    stop_words.extend(["мочь"])
 
     if mode == "query":
         if type(texts_dict) == type(str()):
@@ -45,10 +46,10 @@ def nomalize(texts_dict, mode="dict_texts"):
         norm_words = list()
 
         for word in word_tokenize(text):
+            word = morph_analyzer.parse(word)[0].normal_form
             if word in stop_words:
                 continue
             else:
-                word = morph_analyzer.parse(word)[0].normal_form
                 norm_words.append(word)
         norm_texts.append(norm_words)
 

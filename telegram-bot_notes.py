@@ -92,17 +92,24 @@ async def search_notes(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
 
         norm_notes = nomalize(notes)
         norm_query = nomalize(query, mode='query')
-        grouped_notes = get_texts_group(norm_query, norm_notes, number_of_topics=10)
-        tf_idf = getTFIDFWidthFromNotes(norm_query, grouped_notes)
-        ids_d = getRelevantNotesByTFIDF(tf_idf)
-        ids = list(map(lambda x: x['notes'], ids_d))
+        grouped_notes = get_texts_group(norm_query, norm_notes, number_of_topics=20)
+        
+        if len(grouped_notes) != 0:
+            tf_idf = getTFIDFWidthFromNotes(norm_query, grouped_notes)
+            ids_d = getRelevantNotesByTFIDF(tf_idf)
+            ids = list(map(lambda x: x['id'], ids_d))
 
-        reply_message = ""
-        for i, j in enumerate(ids):
-            reply_message += f"{i+1}. " + notes[j]
+            string_notes = ""
+            for i, j in enumerate(ids):
+                string_notes += f"{i+1}. " + notes[j] + "\n"
+            
+            reply_message = text_data['search_message'] + "\n\n" + string_notes
+        
+        else:
+            reply_message = text_data['no_notes_found']
         
         await update.message.reply_text(
-            text_data['search_message'] + "\n\n" + reply_message, 
+            reply_message, 
             reply_markup=menu_markup,
         )
     except:

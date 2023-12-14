@@ -1,17 +1,14 @@
-# На вход подаются 1) (tf-idf запроса) список из чисел 2) (tf-idf текстов (заметок)) словарь со списками из чисел
-# На выход возвращается список из индексов самых подходящих текстов (до 5 или 10)
+# На вход подаются словарь со c tf-idf запроса и заметок
+# На выход возвращается список из словарей (словарь для каждой заметки), в котором храниться релевантность и id заметки
 #
-# Пример 1 (запрос):
-# Вход: 
-# tf-idf запроса: [0.9, 0. , 0. , 0. , 0.1]
-# tf-idf текстов: {0: [0.8, 0. , 0. , 0. , 0.2], 2: [0.66666667, 0. , 0. , 0. , 0.66666667]}
-# Выход: [0]
+# Пример:
+# Вход: {"query": array([[0. , 0. , 0. , 0.70710678]]), "notes": {0: array([0.18569534, 0.18569534, 0.37139068, 0.18569534])}}
+# Выход: [{'relevated': 0.7071067811865476, 'notes': 0}]
 #
 # Ссылка на гугл колаб файл с примером реализации tf-idf (мой): 
-# В самом конце там есть описание алгоритма, которое мы обсуждали на паре (где списки перемножаются)
 # https://colab.research.google.com/drive/12lf77dL1nvCl5pk9TPKHDQnOSbsnZm8C?usp=sharing
 
-def getRelevantNotesByTFIDF (TFIDF, count = 5) :
+def getRelevantNotesByTFIDF (TFIDF, count = 5, delete_unrelevant=True) :
     queryTFIDF = TFIDF['query'][0]
     notesDistTFIDF = TFIDF['notes']
 
@@ -21,14 +18,17 @@ def getRelevantNotesByTFIDF (TFIDF, count = 5) :
         for j in range(len(noteTFIDF)) :
             amountRelevantWords += noteTFIDF[j] * queryTFIDF[j]
         relevantNotes.append({
-            "relevated": amountRelevantWords,
-            "notes": key
+            "relevanted": amountRelevantWords,
+            "id": key
         })
     
-    relevantNotes.sort(reverse=True,key=lambda note:note["relevated"])
+    relevantNotes.sort(reverse=True,key=lambda note:note["relevanted"])
 
     # Удаление записей с нулевой релевантностью
-    # relevantNotes = [relevantNotes[i] for i in range(len(relevantNotes)) if relevantNotes[i]["relevated"] > 0]
+    if delete_unrelevant:
+        only_relevantNotes = [relevantNotes[i] for i in range(len(relevantNotes)) if relevantNotes[i]["relevanted"] > 0]
+        if len(only_relevantNotes) > 0:
+            relevantNotes = only_relevantNotes
 
     if (len(relevantNotes) > count):
         relevantNotes = relevantNotes[:count]

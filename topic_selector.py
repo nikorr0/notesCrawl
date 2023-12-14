@@ -25,7 +25,7 @@ def get_sorted_keys(d, texts_to_return):
 def get_texts_group(query, texts_dict, number_of_topics=10, texts_to_return=-1, limit=0.5):
     if texts_to_return <= 0:
       texts_to_return = len(texts_dict) // 3
-
+    
     query = query.split()
     texts = [text.split() for text in texts_dict.values()]
     ids = [id for id in texts_dict.keys()]
