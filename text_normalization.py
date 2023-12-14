@@ -23,7 +23,7 @@ import pymorphy3
 def nomalize(texts_dict, mode="dict_texts"):
     morph_analyzer = pymorphy3.MorphAnalyzer()
     stop_words = stopwords.words('russian')
-    stop_words.extend(["мочь"])
+    stop_words.extend(["мочь", "это", "либо", "всё", "ещё", "весь", "который", "больший"])
 
     if mode == "query":
         if type(texts_dict) == type(str()):

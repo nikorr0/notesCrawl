@@ -31,7 +31,7 @@ print(norm_notes) # {0: 'er моделирование нужно оставит
 # которые вернуться, если пройдут ограничение (limit)
 # по умолчанию (texts_to_return=-1) максимальное количество заметок, которые могут вернуться
 # состовляет в три раза меньше, чем было подано в функцию
-grouped_notes = get_texts_group(norm_query, norm_notes, number_of_topics=10, texts_to_return=-1, limit=0.5)
+grouped_notes = get_texts_group(norm_query, norm_notes, number_of_topics=20, texts_to_return=-1, limit=0.5)
 print(grouped_notes) # {1: 'кабинет соцгум восстановление пропуск'}
  
 # преобразование нормализованного запроса и группированных заметок в tf-idf
@@ -41,7 +41,7 @@ print(tf_idf) # {'query': array([[0., 0., 1., 0.]]), 'notes': {1: array([0.5, 0.
 ids_d = getRelevantNotesByTFIDF(tf_idf)
 print(ids_d) # [{'relevated': 0.5, 'notes': 1}]
 
-ids = list(map(lambda x: x['notes'], ids_d))
+ids = list(map(lambda x: x['id'], ids_d))
 for i, j in enumerate(ids):
     print(f"{i+1}. " + notes[j])
 # 1. 310 кабинет соцгум, для восстановления пропуска.
