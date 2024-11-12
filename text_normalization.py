@@ -16,14 +16,14 @@
 
 import string
 import re
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
 import pymorphy3
+import pickle
+
+with open("nltk_stopwords_russian_extended.pickle", 'rb') as file:
+    stop_words = pickle.load(file)
 
 def nomalize(texts_dict, mode="dict_texts"):
     morph_analyzer = pymorphy3.MorphAnalyzer()
-    stop_words = stopwords.words('russian')
-    stop_words.extend(["мочь", "это", "либо", "всё", "ещё", "весь", "который", "больший"])
 
     if mode == "query":
         if type(texts_dict) == type(str()):
@@ -45,7 +45,7 @@ def nomalize(texts_dict, mode="dict_texts"):
         text = re.sub('[0-9]+', '', text)
         norm_words = list()
 
-        for word in word_tokenize(text):
+        for word in text.split():
             word = morph_analyzer.parse(word)[0].normal_form
             if word in stop_words:
                 continue
